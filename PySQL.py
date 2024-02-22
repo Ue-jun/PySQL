@@ -1,21 +1,23 @@
 import pymysql.cursors
+import configparser
 
-# データベース接続情報
-# connection = pymysql.connect(host='mysql301.phy.lolipop.lan',
-#                              user='LAA1042641',
-#                              password='sashi3371',
-#                              database='LAA1042641-application',
-#                              charset='utf8mb4',
-#                              cursorclass=pymysql.cursors.DictCursor)
+# 設定ファイルのパス
+config_file = '../../settings.ini'
+
+# コンフィグパーサーの初期化
+config = configparser.ConfigParser()
+config.read(config_file)
+
+# コンフィグのルート
+db_config = config['LOCAL_DB']
 
 # データベース接続情報（開発用）
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='',
-                             database='development_main',
+connection = pymysql.connect(host=db_config['host'],
+                             user=db_config['user'],
+                             password=db_config['password'],
+                             database=db_config['database'],
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
-
 
 try:
     with connection.cursor() as cursor:
@@ -26,7 +28,7 @@ try:
         # 結果の取得
         result = cursor.fetchall()
         for row in result:
-            print(row['manageID'])
+            print(row['Title'])
 
 finally:
     connection.close()
